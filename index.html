@@ -7,21 +7,19 @@
 -->
 <head> 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link href="jscropper.css" rel="stylesheet">
+  <link href="pdf-gen.css" rel="stylesheet">
 </head>
 <body>
   <div style="text-align:center;">
-    <h1> pdf cropper </h1>
+    <h1> pdf generator </h1>
     <input id='pdf' type='file' class="btn"/>
 
     <form>
       <div class='text_box'>
-        <label for="uname">Inches to be cropped: </label>
-        <input type="text" id="inches_input" name="name" placeholder="0 - 11; Default is 1">
       </div>
     </form>
 
-    <input type="button" class="btn" value="Crop" id = "redact_button"/>
+    <input type="button" class="btn" value="Generate" id = "redact_button"/>
 
     <p class="status" id="process_status"></p>
     <p class="wait_time" id="wait_time"></p>
@@ -40,7 +38,7 @@
     // Asynchronous download PDF as an ArrayBuffer
     //
     var pdf = document.getElementById('pdf');
-    var o_pdf = new jsPDF();
+    var o_pdf = new jsPDF("p", "mm", "a4" );
     var inches = 1;
     var save_name;
     var loading_percent = 0;
@@ -50,32 +48,12 @@
     document.getElementById('redact_button').onclick = function() {
       loading_percent = 0;
 
-      inches = document.getElementById('inches_input').value;
-      if(Number(inches)) {
-        inches = Number(inches);
-      }
-      else if(inches == "" || !inches) {
-        inches = 1;
-      }
-      else {
-        inches = NaN;
-      }
-
       if(!pdf.files[0]) {
         fileError();
       }
       else if(['application/pdf'].indexOf(pdf.files[0].type) == -1) {
         console.log("what");
         pdfError();
-      }
-      else if(!inches) {
-        numberError();
-      }
-      else if(inches < 0) {
-        lowerBoundError();
-      }
-      else if(inches > 11) {
-        upperBoundError();
       }
       else {
         if (file = pdf.files[0]) {
@@ -87,7 +65,7 @@
         fileReader = new FileReader();
 
         fileReader.onload = function(ev) {
-          save_name = "CROPPED_" + pdf.files[0].name;
+          save_name = "GEN_" + pdf.files[0].name;
 
             console.log(ev);
             PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
@@ -161,7 +139,7 @@
     }
 
     function convertPage(page, i) {
-      var scale = 1.3;
+      var scale = 5;
       //var viewport = page.getViewport(canvas.width / page.getViewport(1.0).width);
       var viewport = page.getViewport(scale);
       //
@@ -185,9 +163,12 @@
         var imgData = canvas.toDataURL("image/jpeg", 1.0);
 
         var imgCrop = new Image();
-        imgCrop.src = getImagePortion(canvas, canvas.width, canvas.height, 0, (canvas.height * (inches/11)), 1);
+        imgCrop.src = imgData;
         o_pdf.setPage(i);
-        o_pdf.addImage(imgCrop, 'JPEG', 0, 0);
+
+        console.log(canvas.width);
+        o_pdf.addImage(imgCrop, 'JPEG', 0,0, 210, 297);//, o_pdf.internal.pageSize.width, o_pdf.internal.pageSize.height);
+        o_pdf.text(20, 20, 'Connor')
       
         console.log("page saved");
         console.log(percent_increment);
