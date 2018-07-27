@@ -1,14 +1,16 @@
 var rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
 
 function handleExFile(e) {
+  document.getElementById('excel').blur();
+
 	NAME_LIST = [];
 	var files = e.target.files, f = files[0];
-  var type_list = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-	if(type_list.indexOf(excel.files[0].type) == -1) {
-		excelError();
+  console.log(excel.files[0].name.split('.').pop());
+
+	if(!excelTypeCheck(excel.files[0])) {
     return;
   }
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var data = e.target.result;
@@ -28,7 +30,11 @@ function readNames(workbook) {
 	return json_list.map(x => x.A);
 }
 
-function excelError() {
-  document.getElementById("process_status").style.color = "red";
-  document.getElementById('process_status').innerHTML = "Error: must be XLS or XLSX file.";
+function excelTypeCheck(file) {
+  if(['xlsx','xls'].indexOf(file.name.split('.').pop()) == -1) {
+    document.getElementById("process_status").style.color = "red";
+    document.getElementById('process_status').innerHTML = "Error: Excel document must be XLS or XLSX file.";
+    return false;
+  }
+  return true;
 }

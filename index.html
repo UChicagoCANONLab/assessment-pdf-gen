@@ -10,6 +10,8 @@
   <script type="text/javascript" src="pdf.js"></script>
   <script type="text/javascript" src="excel-reader.js"></script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -30,8 +32,8 @@
     <!-- PAGE # INPUT BOX -->
     <form>
       <div class='text_box'>
-        <label for="uname">Assessment length: </label>
-        <input type="text" id="pages_input" name="name" placeholder="(Pages)">
+        <label for="uname">Test length: </label>
+        <input type="text" id="pages_input" name="name" placeholder="# Pages">
       </div>
     </form>
 
@@ -42,6 +44,12 @@
     <p class="status" id="process_status"></p>
     <p class="wait_time" id="wait_time"></p>
   </div>
+
+  <script type="text/javascript">
+    $(function() {
+      $("form").submit(function() { return false; });
+    });
+  </script>
 
   
   <script type="text/javascript">
@@ -60,6 +68,7 @@
     var LOADING_PERCENT = 0;
     var PERCENT_INCREMENT = 0;
     var PERCENT_OBJ = document.getElementById('wait_time');
+    var STAGED = false;
 
     /* EVENT LISTENERS */
     excel.addEventListener('change', handleExFile, false);
@@ -68,6 +77,7 @@
 
     /* PDF LOADING HANDLER */
     function handlePDFFile(ev) {
+      document.getElementById('pdf').blur();
       if(['application/pdf'].indexOf(pdf.files[0].type) == -1) {
         pdfError();
         return;
@@ -79,11 +89,17 @@
 
     /* BUTTON CLICK HANDLER */
     function generatePDF() {
+      document.getElementById('redact_button').blur();
       LOADING_PERCENT = 0;
 
-      TEST_PAGES = document.getElementById('pages_input').value;
-      
+      if(STAGED) {
+        console.log("downloading");
+        O_PDF.save(SAVE_NAME);
+        O_PDF = new jsPDF();
+        return;
+      }
 
+      TEST_PAGES = document.getElementById('pages_input').value;
       if(!pdf.files[0]) {
         fileError();
         return;
@@ -110,10 +126,7 @@
         pdfError();
         return;
       }
-      var type_list = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-      if(type_list.indexOf(excel.files[0].type) == -1) {
-        excelError();
+      if(!excelTypeCheck(excel.files[0])) {
         return;
       }
       if(Number(TEST_PAGES)) {
@@ -161,9 +174,9 @@
               
             }
             Promise.all(prom_list).then(function() {
-              console.log("downloading");
-              O_PDF.save(SAVE_NAME);
-              O_PDF = new jsPDF();
+              document.getElementById('redact_button').value = "Download";
+              STAGED = true;
+
               document.getElementById("process_status").style.color = "black";
               document.getElementById('process_status').innerHTML = "Done."
               PERCENT_OBJ.innerHTML = "";
