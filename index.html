@@ -5,9 +5,12 @@
   <link href="pdf-gen.css" rel="stylesheet">
 
   <!-- IMPORTS -->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.1/processing-api.min.js"></script>
+  <script src="pdf.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.worker.js?"></script>
+  <script type="text/javascript" src="https://unpkg.com/pdfjs-dist@2.0.489/build/pdf.worker.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.1/processing-api.min.js"></script><html>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="pdf.js"></script>
+
   <script type="text/javascript" src="excel-reader.js"></script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -59,6 +62,8 @@
     /* GLOBALS - PAGE ELEMENTS */
     var pdf = document.getElementById('pdf');
     var excel = document.getElementById('excel');
+    var percent_obj = document.getElementById('wait_time');
+
 
     /* GLOBALS - DATA */
     var O_PDF = new jsPDF("p", "mm", "a4" );
@@ -67,7 +72,6 @@
     var SAVE_NAME;
     var LOADING_PERCENT = 0;
     var PERCENT_INCREMENT = 0;
-    var PERCENT_OBJ = document.getElementById('wait_time');
     var STAGED = false;
 
     /* EVENT LISTENERS */
@@ -179,7 +183,7 @@
 
               document.getElementById("process_status").style.color = "black";
               document.getElementById('process_status').innerHTML = "Done."
-              PERCENT_OBJ.innerHTML = "";
+              percent_obj.innerHTML = "";
 
             })
 
@@ -267,8 +271,8 @@
       if(LOADING_PERCENT < 100) {
         LOADING_PERCENT += inc;
       }
-      PERCENT_OBJ.innerHTML = Math.round(LOADING_PERCENT) + "%";
-      console.log(PERCENT_OBJ.innerHTML);
+      percent_obj.innerHTML = Math.round(LOADING_PERCENT) + "%";
+      console.log(percent_obj.innerHTML);
     }
   </script>
   
