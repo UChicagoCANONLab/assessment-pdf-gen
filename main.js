@@ -44,7 +44,6 @@
       if(STAGED) {
         console.log("downloading");
         O_PDF.save(SAVE_NAME);
-        O_PDF = new jsPDF();
         return;
       }
 

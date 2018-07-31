@@ -47,12 +47,19 @@
 
     <!-- LOADING/STATUS PROGRESS -->
     <p class="status" id="process_status"></p>
-    <p class="wait_time" id="wait_time"> Should contain only a single column of names. Ex:</p>
+    <p class="wait_time" id="wait_time"></p>
   </div>
 
   <script type="text/javascript">
-    $(function() {
-      $("form").submit(function() { return false; });
+    $(document).ready(function(){
+      $(document).keypress(function(e){
+        if (e.which == 13){
+          $("#redact_button").click();
+        }
+      });
+      $(function() {
+        $("form").submit(function() { return false; });
+      });
     });
   </script>
   <script src="main.js"></script>
