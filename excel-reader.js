@@ -1,5 +1,7 @@
 var rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
 
+/* Loads excel life and converts first 
+   column of names in excel to JS list. */
 function handleExFile(e) {
   document.getElementById('excel').blur();
 
@@ -8,8 +10,8 @@ function handleExFile(e) {
   console.log(excel.files[0].name.split('.').pop());
 
 	if(!excelTypeCheck(excel.files[0])) {
-    return;
-  }
+    	return;
+  	}
 
 	var reader = new FileReader();
 	reader.onload = function(e) {
@@ -24,12 +26,14 @@ function handleExFile(e) {
 	if(rABS) reader.readAsBinaryString(f); else reader.readAsArrayBuffer(f);
 }
 
+/* Retrieves names as list. */
 function readNames(workbook) {
 	var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 	var json_list = XLSX.utils.sheet_to_json(worksheet, {header:"A"});
 	return json_list.map(x => x.A);
 }
 
+/* Checks that file is an excel file. */
 function excelTypeCheck(file) {
   if(['xlsx','xls'].indexOf(file.name.split('.').pop()) == -1) {
     document.getElementById("process_status").style.color = "red";
