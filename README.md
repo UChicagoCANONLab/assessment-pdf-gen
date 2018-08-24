@@ -25,6 +25,14 @@ Maps student names from an excel spreadsheet to a pdf of individualized assessme
 
 * Some simple CSS specifications.
 
+### excel_demo.png
+
+* Photo to illustrate how the spreadsheet should be formatted.
+
+### Test_Documents
+
+* Sample PDF and excel spreadsheet to test the app.
+
 ## Authors
 
 Connor Hopcraft
