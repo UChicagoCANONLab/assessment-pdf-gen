@@ -1,6 +1,6 @@
 # PDF Generator
 
-Maps student names from an excel spreadsheet to a pdf of individualized assessments.
+Maps student names from an excel spreadsheet to a pdf of individualized Scratch assessments.
 
 ## Files
 
